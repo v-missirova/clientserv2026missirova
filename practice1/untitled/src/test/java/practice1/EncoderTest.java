@@ -1,3 +1,5 @@
+package practice1;
+
 import org.apache.commons.codec.binary.Hex;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
