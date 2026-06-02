@@ -4,20 +4,22 @@ import java.util.concurrent.BlockingQueue;
 import practice1.Constants;
 import practice1.Decoder;
 import practice1.Packet;
+import practice3.NetworkContext;
 
 public class Decriptor implements Runnable {
-    private final BlockingQueue<byte[]> inputQueue;
-    private final BlockingQueue<Packet> outputQueue;
+    private final BlockingQueue<NetworkContext> inputQueue;
+    private final BlockingQueue<NetworkContext> outputQueue;
 
-    public Decriptor(BlockingQueue<byte[]> inputQueue, BlockingQueue<Packet> outputQueue) {
+    public Decriptor(BlockingQueue<NetworkContext> inputQueue, BlockingQueue<NetworkContext> outputQueue) {
         this.inputQueue = inputQueue;
         this.outputQueue = outputQueue;
     }
 
-    public void decript(byte[] message) {
+    public void decript(NetworkContext context) {
         try {
-            Packet decryptedMsg = Decoder.decode(message, Constants.KEY);
-            outputQueue.put(decryptedMsg);
+            Packet decryptedMsg = Decoder.decode(context.getRawData(), Constants.KEY);
+            context.setPacket(decryptedMsg);
+            outputQueue.put(context);
         }
         catch (Exception e) {
             System.err.println("error while decrypting the package: " + e.getMessage());
@@ -32,8 +34,8 @@ public class Decriptor implements Runnable {
         boolean isRunning = true;
         while (isRunning) {
             try {
-                byte[] message = inputQueue.take();
-                decript(message);
+                NetworkContext context = inputQueue.take();
+                decript(context);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;

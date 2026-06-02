@@ -1,3 +1,4 @@
+/*
 package homework2;
 
 import java.net.InetAddress;
@@ -35,4 +36,4 @@ public class FakeSender implements Sender, Runnable {
             }
         }
     }
-}
+}*/

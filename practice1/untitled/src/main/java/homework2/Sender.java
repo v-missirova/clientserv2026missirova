@@ -1,7 +1,7 @@
 package homework2;
 
-import java.net.InetAddress;
+import practice3.NetworkContext;
 
 public interface Sender {
-    void sendMessage(byte[] mess, InetAddress target);
+    void send(NetworkContext context);
 }
