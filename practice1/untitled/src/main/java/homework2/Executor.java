@@ -1,6 +1,7 @@
 package homework2;
 
 import practice3.*;
+import practice4.ProductService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,8 @@ public class Executor {
     private final List<ExecutorService> pools = new ArrayList<>();
 
     public void start() {
+        ProductService db = new ProductService("warehouse.db");
+
         BlockingQueue<NetworkContext> queue1 = new LinkedBlockingQueue<>(100);
         BlockingQueue<NetworkContext> queue2 = new LinkedBlockingQueue<>(100);
         BlockingQueue<NetworkContext> queue3 = new LinkedBlockingQueue<>(100);
@@ -38,7 +41,7 @@ public class Executor {
         new Thread(udpServer).start();
 
         for (int i = 0; i < 3; i++) decryptors.execute(new Decriptor(queue1, queue2));
-        for (int i = 0; i < 4; i++) processors.execute(new Processor(queue2, queue3));
+        for (int i = 0; i < 4; i++) processors.execute(new Processor(queue2, queue3, db));
         for (int i = 0; i < 3; i++) encryptors.execute(new Encriptor(queue3, queue4));
 
         for (int i = 0; i < 5; i++) senders.execute(new RealSender(queue4));
